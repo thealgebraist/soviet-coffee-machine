@@ -1,9 +1,16 @@
-SHELL := /bin/bash
-CONDA_ENV := coffee_env
-
-.PHONY: all build wasm clean setup setup-zig setup-local check-versions test test-conda test-run-local run-server gen-image gen-tts gen-sfx
+.PHONY: all build wasm clean setup setup-zig setup-mojo setup-local check-versions test test-conda test-run-local run-server run-mojo gen-image gen-tts gen-sfx
 
 all: build wasm
+
+# ... (rest of the file handles build) ...
+
+setup-mojo:
+	@echo "Setting up Mojo environment..."
+	bash server/mojo_setup.sh
+
+run-mojo:
+	@echo "Running Mojo Crema Optimizer..."
+	@cd mojo_project && magic run mojo hello.mojo
 
 # --- Build Logic ---
 build:
