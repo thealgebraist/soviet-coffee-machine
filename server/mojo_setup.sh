@@ -5,27 +5,20 @@ set -e
 
 echo "Detected OS: $(uname)"
 
-# 1. Install Magic package manager (Modular's modern way)
+# 1. Install Magic package manager (Modular's robust cross-platform method)
 if ! command -v magic &> /dev/null
 then
-    echo "Installing Magic package manager..."
-    if [[ "$(uname)" == "Darwin" ]]; then
-        # Mac
-        if ! command -v brew &> /dev/null; then
-            echo "Error: Homebrew is required on Mac for Magic installation."
-            exit 1
-        fi
-        brew install modularml/software/magic
-    else
-        # Linux
-        curl -ssL https://magic.modular.com | sh
-    fi
+    echo "Installing Magic package manager via curl..."
+    curl -ssL https://magic.modular.com | sh
 else
     echo "Magic package manager already installed."
 fi
 
-# 2. Add magic to PATH if just installed (Linux)
-if [[ "$(uname)" == "Linux" ]]; then
+# 2. Add magic to PATH (Linux and Mac)
+if [[ "$(uname)" == "Darwin" ]]; then
+    # On Mac, Magic typically installs to /Users/USER/.modular/bin
+    export PATH="$HOME/.modular/bin:$PATH"
+else
     export PATH="$HOME/.modular/bin:$PATH"
 fi
 
