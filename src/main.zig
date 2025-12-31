@@ -102,7 +102,7 @@ fn set_tts(comptime fmt: []const u8, args: anytype) void {
 fn set_sfx(comptime fmt: []const u8, args: anytype) void {
     var temp_buf: [1024]u8 = undefined;
     const desc = std.fmt.bufPrint(&temp_buf, fmt, args) catch "error";
-    const final = std.fmt.bufPrint(&sfx_buffer, "SFX: {s} (64 iterations, high quality, ldm2)", .{desc}) catch "Error";
+    const final = std.fmt.bufPrint(&sfx_buffer, "SFX: {s} (256 iterations, high quality, ldm2)", .{desc}) catch "Error";
     sfx_len = final.len;
 }
 
