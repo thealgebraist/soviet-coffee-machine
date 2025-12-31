@@ -18,12 +18,12 @@ echo "Creating environment $ENV_NAME..."
 conda create -n $ENV_NAME python=3.10 -y
 conda run -n $ENV_NAME pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# 5. Install libraries
-pip install transformers datasets accelerate diffusers fastapi uvicorn scipy xformers 
+# 5. Install libraries via conda run
+conda run -n $ENV_NAME pip install transformers datasets accelerate diffusers fastapi uvicorn scipy xformers 
 # Bark specific
-pip install git+https://github.com/suno-ai/bark.git
+conda run -n $ENV_NAME pip install git+https://github.com/suno-ai/bark.git
 
 # 6. Verify setup
-python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"None\"}')"
+conda run -n $ENV_NAME python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"None\"}')"
 
 echo "Setup complete. Run 'conda activate coffee_env' then 'python generator.py'"
