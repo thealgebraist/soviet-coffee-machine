@@ -77,13 +77,18 @@ test-run-local:
 	-make test-conda || echo "[INFO] Conda test failed as expected (missing packages)."
 	@echo "--- Local Run Attempt Finished ---"
 
-run-server:
-	@echo "Starting Media Generation Server..."
-	@if ! conda info --envs | grep -q $(CONDA_ENV); then \
-		echo "ERROR: Environment $(CONDA_ENV) not found. Please run 'make setup' first."; \
-		exit 1; \
-	fi
-	conda run -n $(CONDA_ENV) python server/generator.py
+setup-cpp:
+	@echo "Setting up C++ Media Server Workspace..."
+	bash server/cpp/setup_cpp_deps.sh
+
+build-cpp:
+	@echo "Building C++ Media Server..."
+	@mkdir -p server/cpp/build
+	@cd server/cpp/build && cmake .. && make
+
+run-server-cpp:
+	@echo "Starting Soviet C++ Media Server..."
+	./server/cpp/build/generator_server
 
 gen-image:
 	@if [ -z "$(PROMPT)" ]; then echo "Usage: make gen-image PROMPT='your prompt'"; exit 1; fi
