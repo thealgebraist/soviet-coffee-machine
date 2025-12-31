@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 CONDA_ENV := coffee_env
 
-.PHONY: all build wasm clean setup setup-local check-versions test test-conda test-run-local
+.PHONY: all build wasm clean setup setup-zig setup-local check-versions test test-conda test-run-local run-server gen-image gen-tts gen-sfx
 
 all: build wasm
 
@@ -69,3 +69,25 @@ test-run-local:
 	@echo "2. Attempting Conda Test..."
 	-make test-conda || echo "[INFO] Conda test failed as expected (missing packages)."
 	@echo "--- Local Run Attempt Finished ---"
+
+run-server:
+	@echo "Starting Media Generation Server..."
+	conda run -n $(CONDA_ENV) python server/generator.py
+
+gen-image:
+	@if [ -z "$(PROMPT)" ]; then echo "Usage: make gen-image PROMPT='your prompt'"; exit 1; fi
+	curl -X POST http://localhost:8000/generate \
+		-H "Content-Type: application/json" \
+		-d "{\"image_prompt\": \"$(PROMPT)\"}"
+
+gen-tts:
+	@if [ -z "$(PROMPT)" ]; then echo "Usage: make gen-tts PROMPT='your prompt'"; exit 1; fi
+	curl -X POST http://localhost:8000/generate \
+		-H "Content-Type: application/json" \
+		-d "{\"tts_prompt\": \"$(PROMPT)\"}"
+
+gen-sfx:
+	@if [ -z "$(PROMPT)" ]; then echo "Usage: make gen-sfx PROMPT='your prompt'"; exit 1; fi
+	curl -X POST http://localhost:8000/generate \
+		-H "Content-Type: application/json" \
+		-d "{\"sfx_prompt\": \"$(PROMPT)\"}"
