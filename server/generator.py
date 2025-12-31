@@ -72,11 +72,12 @@ async def generate_all(req: PromptRequest):
         image.save(img_path)
         results["image_url"] = img_path
 
-    # 2. Generate SFX (LDM2, 64 iterations)
+    # 2. Generate SFX (LDM2, 256 iterations)
     if req.sfx_prompt:
         pipe = get_ldm()
         clean_sfx = req.sfx_prompt.replace("SFX: ", "").split("(")[0].strip()
-        audio = pipe(clean_sfx, num_inference_steps=64).audios[0]
+        # High fidelity mode (256 steps)
+        audio = pipe(clean_sfx, num_inference_steps=256).audios[0]
         sfx_path = f"output/{job_id}/sfx.wav"
         scipy.io.wavfile.write(sfx_path, rate=16000, data=audio)
         results["sfx_url"] = sfx_path
