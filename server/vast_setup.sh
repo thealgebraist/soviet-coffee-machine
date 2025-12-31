@@ -17,7 +17,7 @@ ENV_NAME="coffee_env"
 echo "Creating environment $ENV_NAME..."
 conda create -n $ENV_NAME python=3.10 -y
 # Pin Torch to 2.4.1 to avoid Flash Attention schema mismatch in 2.5+
-conda run -n $ENV_NAME pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
+conda run -n $ENV_NAME pip install torch==2.4.1 --index-url https://download.pytorch.org/whl/cu121
 
 # 4. Remove flash-attn if present (causes schema mismatch conflicts with torch 2.4/2.5)
 conda run -n $ENV_NAME pip uninstall -y flash-attn
