@@ -72,6 +72,10 @@ test-run-local:
 
 run-server:
 	@echo "Starting Media Generation Server..."
+	@if ! conda info --envs | grep -q $(CONDA_ENV); then \
+		echo "ERROR: Environment $(CONDA_ENV) not found. Please run 'make setup' first."; \
+		exit 1; \
+	fi
 	conda run -n $(CONDA_ENV) python server/generator.py
 
 gen-image:

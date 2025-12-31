@@ -8,18 +8,15 @@ then
     exit 1
 fi
 
-# 2. Identify CUDA version from nvidia-smi
-CUDA_VERSION=$(nvidia-smi | grep -oP 'CUDA Version: \K[\d.]+')
+# 2. Identify CUDA version from nvidia-smi (portable version)
+CUDA_VERSION=$(nvidia-smi | grep "CUDA Version" | awk '{print $NF}')
 echo "Detected CUDA Support: $CUDA_VERSION"
 
 # 3. Create environment
-conda create -n coffee_env python=3.10 -y
-source $(conda info --base)/etc/profile.d/conda.sh
-conda activate coffee_env
-
-# 4. Install PyTorch (Assuming CUDA 12.1 or 11.8 compatible)
-# We aim for the latest stable
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+ENV_NAME="coffee_env"
+echo "Creating environment $ENV_NAME..."
+conda create -n $ENV_NAME python=3.10 -y
+conda run -n $ENV_NAME pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 # 5. Install libraries
 pip install transformers datasets accelerate diffusers fastapi uvicorn scipy xformers 
