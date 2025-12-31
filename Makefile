@@ -84,7 +84,12 @@ setup-cpp:
 build-cpp:
 	@echo "Building C++ Media Server..."
 	@mkdir -p server/cpp/build
-	@cd server/cpp/build && cmake .. && make
+	@# Automatically set Torch_DIR if the local libtorch folder exists
+	@TORCH_DIR_ARG=""; \
+	if [ -d "$$(pwd)/libtorch" ]; then \
+		TORCH_DIR_ARG="-DTorch_DIR=$$(pwd)/libtorch/share/cmake/Torch"; \
+	fi; \
+	cd server/cpp/build && cmake $$TORCH_DIR_ARG .. && make
 
 run-server-cpp:
 	@echo "Starting Soviet C++ Media Server..."

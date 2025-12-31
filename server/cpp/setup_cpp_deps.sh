@@ -17,6 +17,7 @@ else
     echo "Downloading LibTorch (Linux CUDA 12.1)..."
     curl -L https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.4.1%2Bcu121.zip -o libtorch.zip
     unzip -q libtorch.zip
+    rm libtorch.zip
     echo "LibTorch extracted. Set Torch_DIR to $(pwd)/libtorch/share/cmake/Torch"
 fi
 
