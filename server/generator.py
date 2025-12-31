@@ -21,11 +21,15 @@ bark_preloaded = False
 def get_flux():
     global sd_pipe
     if sd_pipe is None:
-        print("Loading FLUX.1-schnell...")
-        # Flux works best with bfloat16 to save memory and maintain precision
+        print("Loading FLUX.1-schnell (with VRAM optimizations)...")
         flux_dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
         sd_pipe = FluxPipeline.from_pretrained("black-forest-labs/FLUX.1-schnell", torch_dtype=flux_dtype)
-        sd_pipe.to(DEVICE)
+        
+        # Optimization for 12GB-16GB VRAM
+        # Offloads parts of the model to CPU when not in use
+        sd_pipe.enable_model_cpu_offload()
+        # Saves even more VRAM during the decoding step
+        sd_pipe.enable_vae_tiling()
     return sd_pipe
 
 def get_ldm():
