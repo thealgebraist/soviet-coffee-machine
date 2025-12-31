@@ -1,11 +1,11 @@
 import torch
 import os
 import scipy.io.wavfile
-from diffusers import FluxPipeline, AudioLDM2Pipeline
+import uuid
+from diffusers import AutoPipelineForText2Image, AudioLDM2Pipeline
 from bark import SAMPLE_RATE, generate_audio, preload_models
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import uuid
 
 # --- Model Config ---
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -18,18 +18,17 @@ sd_pipe = None
 ldm_pipe = None
 bark_preloaded = False
 
-def get_flux():
+def get_sdxl():
     global sd_pipe
     if sd_pipe is None:
-        print("Loading FLUX.1-schnell (with VRAM optimizations)...")
-        flux_dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
-        sd_pipe = FluxPipeline.from_pretrained("black-forest-labs/FLUX.1-schnell", torch_dtype=flux_dtype)
-        
-        # Optimization for 12GB-16GB VRAM
-        # Offloads parts of the model to CPU when not in use
-        sd_pipe.enable_model_cpu_offload()
-        # Saves even more VRAM during the decoding step
-        sd_pipe.enable_vae_tiling()
+        print("Loading SDXL-Turbo (Optimized for 12GB VRAM)...")
+        # SDXL-Turbo fits natively in 12GB in fp16
+        sd_pipe = AutoPipelineForText2Image.from_pretrained(
+            "stabilityai/sdxl-turbo", 
+            torch_dtype=torch.float16, 
+            variant="fp16"
+        )
+        sd_pipe.to(DEVICE)
     return sd_pipe
 
 def get_ldm():
@@ -58,13 +57,13 @@ async def generate_all(req: PromptRequest):
     job_id = str(uuid.uuid4())[:8]
     os.makedirs(f"output/{job_id}", exist_ok=True)
 
-    # 1. Generate Image (FLUX.1-schnell, 4 steps)
+    # 1. Generate Image (SDXL-Turbo, 1 step)
     if req.image_prompt:
-        pipe = get_flux()
-        # Flux.1-schnell is distilled for 4 steps and guidance_scale=0.0
+        pipe = get_sdxl()
+        # SDXL-Turbo is optimized for 1-step generation
         image = pipe(
-            req.image_prompt,
-            num_inference_steps=4,
+            prompt=req.image_prompt,
+            num_inference_steps=1,
             guidance_scale=0.0,
             height=512,
             width=512
@@ -76,7 +75,6 @@ async def generate_all(req: PromptRequest):
     # 2. Generate SFX (LDM2, 64 iterations)
     if req.sfx_prompt:
         pipe = get_ldm()
-        # Clean prompt (remove "SFX: " prefix if present)
         clean_sfx = req.sfx_prompt.replace("SFX: ", "").split("(")[0].strip()
         audio = pipe(clean_sfx, num_inference_steps=64).audios[0]
         sfx_path = f"output/{job_id}/sfx.wav"
@@ -95,6 +93,5 @@ async def generate_all(req: PromptRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    # Preload to check VRAM if needed, or just let lazy load handle it
     print(f"Starting generator on {DEVICE}...")
     uvicorn.run(app, host="0.0.0.0", port=8000)
