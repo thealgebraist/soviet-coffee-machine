@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SOVIET COFFEE PROTOCOL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="container">
+        <div id="terminal">
+            <div id="log"></div>
+        </div>
+        <div id="visuals">
+            <div id="image-display">
+                <div>
+                    <p class="panel-header">VISUAL FEED [SIMULATION]</p>
+                    <p id="image-prompt-text">WAITING...</p>
+                    <hr>
+                    <p class="panel-header">INTERNAL MONOLOGUE (BARK)</p>
+                    <p id="tts-prompt-text">...</p>
+                    <hr>
+                    <p class="panel-header">AUDITORY SENSORS (LDM2)</p>
+                    <p id="sfx-prompt-text">...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="input-area">
+        <span style="padding: 10px; color: var(--terminal-green);">></span>
+        <input type="text" id="cmd-input" autofocus autocomplete="off">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

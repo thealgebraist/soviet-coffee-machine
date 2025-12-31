@@ -1,0 +1,16 @@
+# Zig artifacts
+zig-out/
+.zig-cache/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+output/
+.env
+
+# Binary/WASM
+www/game.wasm
+
+# OS
+.DS_Store

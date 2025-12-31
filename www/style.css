@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+    --soviet-red: #8a1c1c;
+    --industrial-grey: #2c2c2c;
+    --terminal-green: #33ff33;
+    --amber: #ffb000;
+    --black: #0a0a0a;
+}
+
+body {
+    background-color: var(--black);
+    color: var(--amber);
+    font-family: 'Share Tech Mono', monospace;
+    margin: 0;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#container {
+    display: flex;
+    flex: 1;
+    border: 4px solid var(--industrial-grey);
+    background: #111;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* CRT Scanline effect */
+body::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+#terminal {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 2px solid var(--industrial-grey);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.log-entry {
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+}
+
+.user-input {
+    color: var(--terminal-green);
+}
+
+.system-output {
+    color: var(--amber);
+}
+
+#visuals {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    border-left: 2px solid #222;
+}
+
+#image-display {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--soviet-red);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+    padding: 20px;
+    color: #555;
+    font-size: 0.8em;
+    background: #050505;
+    overflow-y: auto;
+}
+
+.panel-header {
+    color: var(--soviet-red);
+    font-weight: bold;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    margin: 10px 0 5px 0;
+}
+
+#image-prompt-text,
+#tts-prompt-text,
+#sfx-prompt-text {
+    font-style: italic;
+    color: var(--amber);
+    margin-bottom: 20px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #222;
+    width: 100%;
+}
+
+#input-area {
+    margin-top: 10px;
+    display: flex;
+}
+
+#cmd-input {
+    background: #000;
+    border: 2px solid var(--industrial-grey);
+    color: var(--terminal-green);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2em;
+    flex: 1;
+    padding: 10px;
+    outline: none;
+}
+
+#cmd-input:focus {
+    border-color: var(--soviet-red);
+}
