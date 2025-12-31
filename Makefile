@@ -1,4 +1,4 @@
-.PHONY: all build wasm clean setup setup-zig setup-mojo setup-local check-versions test test-conda test-run-local run-server run-mojo gen-image gen-tts gen-sfx
+.PHONY: all build wasm clean setup setup-zig setup-mojo setup-local check-versions test test-conda test-run-local run-server run-mojo gen-image gen-tts gen-sfx machine
 
 all: build wasm
 
