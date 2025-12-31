@@ -113,15 +113,15 @@ gen-sfx:
 		-H "Content-Type: application/json" \
 		-d "{\"sfx_prompt\": \"$(PROMPT)\"}"
 
-BASE_PROMPT := 1930s Soviet industrial coffee machine KOF-34-B, massive weathered brass and steel structure, complex analog gauges with Cyrillic markings, glass tubes, steam pipes, dark wood levers, cinematic lighting, dimly lit industrial basement, gritty realistic texture, 8k resolution
+BASE_PROMPT := 1930s Soviet industrial coffee machine, weathered brass steel, analog gauges, steam pipes, cinematic lighting, gritty realistic, 8k
 
 machine:
-	@echo "Generating 8 variations of the KOF-34-B..."
-	@make gen-image PROMPT="$(BASE_PROMPT), idle, steady atmospheric lighting, cold metal surfaces"
-	@make gen-image PROMPT="$(BASE_PROMPT), pressurizing, thin wisps of steam escaping from a brass valve, vibrant orange glow from furnace below"
-	@make gen-image PROMPT="$(BASE_PROMPT), perfect extraction, deep brown oily espresso pouring, thick clouds of swirling white steam, shaking pipes"
-	@make gen-image PROMPT="$(BASE_PROMPT), critical overpressure, needles vibrating at red zone, violent high-pressure steam jets spraying from joints"
-	@make gen-image PROMPT="$(BASE_PROMPT), catastrophic meltdown, white-hot glowing core visible through cracks, melting brass, sparks and embers"
-	@make gen-image PROMPT="$(BASE_PROMPT), engine fire, intense flames licking the boiler, thick black soot, melting rubber seals"
-	@make gen-image PROMPT="$(BASE_PROMPT), boiler explosion, shattered glass gauges, twisted copper pipes, massive steam cloud, chaotic debris"
-	@make gen-image PROMPT="$(BASE_PROMPT), abandoned version, thick rust, cobwebs, layer of industrial dust, shafts of sunlight through broken ceiling"
+	@echo "Generating 8 variations (32 steps, 1024x768)..."
+	@make gen-image PROMPT="$(BASE_PROMPT), idle, cold metal"
+	@make gen-image PROMPT="$(BASE_PROMPT), heating, steam wisps, orange furnace glow"
+	@make gen-image PROMPT="$(BASE_PROMPT), extraction, espresso pouring, thick steam"
+	@make gen-image PROMPT="$(BASE_PROMPT), overpressure, vibrating needles, steam jets"
+	@make gen-image PROMPT="$(BASE_PROMPT), meltdown, white-hot glowing core, melting brass"
+	@make gen-image PROMPT="$(BASE_PROMPT), engine fire, intense flames, black soot"
+	@make gen-image PROMPT="$(BASE_PROMPT), boiler explosion, shattered glass, massive steam"
+	@make gen-image PROMPT="$(BASE_PROMPT), abandoned, heavy rust, cobwebs, dust"

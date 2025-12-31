@@ -57,13 +57,13 @@ async def generate_all(req: PromptRequest):
     job_id = str(uuid.uuid4())[:8]
     os.makedirs(f"output/{job_id}", exist_ok=True)
 
-    # 1. Generate Image (SDXL-Turbo, 4 steps)
+    # 1. Generate Image (SDXL-Turbo, 32 steps)
     if req.image_prompt:
         pipe = get_sdxl()
-        # Increased quality (4 steps) and resolution (1024x768)
+        # Extreme quality mode (32 steps)
         image = pipe(
             prompt=req.image_prompt,
-            num_inference_steps=4,
+            num_inference_steps=32,
             guidance_scale=0.0,
             height=768,
             width=1024
