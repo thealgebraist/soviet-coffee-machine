@@ -23,7 +23,7 @@ conda run -n $ENV_NAME pip install torch==2.4.1 --index-url https://download.pyt
 conda run -n $ENV_NAME pip uninstall -y flash-attn
 
 # 5. Install libraries via conda run
-conda run -n $ENV_NAME pip install transformers datasets accelerate diffusers fastapi uvicorn scipy xformers 
+conda run -n $ENV_NAME pip install transformers datasets accelerate diffusers>=0.30.2 fastapi uvicorn scipy xformers sentencepiece protobuf
 # Bark specific
 conda run -n $ENV_NAME pip install git+https://github.com/suno-ai/bark.git
 

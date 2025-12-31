@@ -1,7 +1,7 @@
 import torch
 import os
 import scipy.io.wavfile
-from diffusers import StableDiffusionPipeline, AudioLDM2Pipeline
+from diffusers import FluxPipeline, AudioLDM2Pipeline
 from bark import SAMPLE_RATE, generate_audio, preload_models
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -18,11 +18,13 @@ sd_pipe = None
 ldm_pipe = None
 bark_preloaded = False
 
-def get_sd():
+def get_flux():
     global sd_pipe
     if sd_pipe is None:
-        print("Loading Stable Diffusion...")
-        sd_pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=DTYPE)
+        print("Loading FLUX.1-schnell...")
+        # Flux works best with bfloat16 to save memory and maintain precision
+        flux_dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
+        sd_pipe = FluxPipeline.from_pretrained("black-forest-labs/FLUX.1-schnell", torch_dtype=flux_dtype)
         sd_pipe.to(DEVICE)
     return sd_pipe
 
@@ -52,10 +54,17 @@ async def generate_all(req: PromptRequest):
     job_id = str(uuid.uuid4())[:8]
     os.makedirs(f"output/{job_id}", exist_ok=True)
 
-    # 1. Generate Image
+    # 1. Generate Image (FLUX.1-schnell, 4 steps)
     if req.image_prompt:
-        pipe = get_sd()
-        image = pipe(req.image_prompt).images[0]
+        pipe = get_flux()
+        # Flux.1-schnell is distilled for 4 steps and guidance_scale=0.0
+        image = pipe(
+            req.image_prompt,
+            num_inference_steps=4,
+            guidance_scale=0.0,
+            height=512,
+            width=512
+        ).images[0]
         img_path = f"output/{job_id}/image.png"
         image.save(img_path)
         results["image_url"] = img_path
