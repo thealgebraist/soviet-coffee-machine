@@ -23,6 +23,14 @@ setup:
 	@echo "Running vast_setup.sh..."
 	bash server/vast_setup.sh
 
+setup-zig:
+	@echo "Installing Zig 0.15.2 for Linux x86_64..."
+	curl -L https://ziglang.org/builds/zig-linux-x86_64-0.15.2.tar.xz -o zig.tar.xz
+	tar -xf zig.tar.xz
+	mv zig-linux-x86_64-0.15.2 zig-linux
+	@echo "Zig installed to ./zig-linux/zig"
+	@echo "Update your PATH: export PATH=\$$PATH:\$$(pwd)/zig-linux"
+
 setup-local:
 	@echo "Running local_setup.sh for this machine..."
 	bash server/local_setup.sh
